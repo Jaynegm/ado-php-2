@@ -3,12 +3,16 @@ try {
     include "abrir_transação.php";
 include_once "operações.php";
 $resultado = listar_todos_sabores(); ?>
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <charset="utf-8">
-        <title>Pizzaria</title>
-    </head>
+<html lang="port-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pizzaria</title>
+    <link rel="stylesheet" href="style.css">
+</head>
     <body>
         <table>
             <tr>

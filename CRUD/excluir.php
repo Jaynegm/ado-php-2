@@ -6,7 +6,7 @@ include_once "operacoes.php";
 $chave = (int) $_POST["sabor"];
 $id = excluir_sabor($sabor);
 
-header("Location: listagem.php");
+header("Location: listar.php");
 
 $transacaoOk = true;
 
