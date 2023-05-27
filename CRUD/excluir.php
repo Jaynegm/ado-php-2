@@ -11,6 +11,6 @@ header("Location: listagem.php");
 $transacaoOk = true;
 
 } finally {
-    include "fechar_transacao.php";
+    include 
 }
 ?>
