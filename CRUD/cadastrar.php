@@ -5,26 +5,87 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="Pizza.png">
+    <link rel="stylesheet" href="style.css">
     <title>Cadastro de Sabores de Pizza</title>
 </head>
 <body>
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Processar os dados enviados pelo formulário
-        $nome = $_POST["nome"];
-        $ingredientes = $_POST["ingredientes"];
-        $preco_sem_borda = $_POST["preco_sem_borda"];
-        $preco_borda_recheada = $_POST["preco_borda_recheada"];
-        $doce = $_POST["doce"];
+    
+<?php
+    
+try {
+    include "abrir_transacao.php";
+    include_once "operacoes.php";
 
-        echo "<h1>Sabor de pizza cadastrado com sucesso!</h1>";
-        echo "<p>Nome: $nome</p>";
-        echo "<p>Ingredientes: $ingredientes</p>";
-        echo "<p>Preço sem Borda Recheada: $preco_sem_borda</p>";
-        echo "<p>Preço com Borda Recheada: $preco_borda_recheada</p>";
-        echo "<p>Doce: " . ($doce == 1 ? 'Sim' : 'Não') . "</p>";
+    $tipos = listar_todos_sabores();
+
+    function validar($sabor) {
+        global $tipos;
+        return strlen($sabor["chave"]) >= 4
+            && strlen($sabor["nome"]) <= 30
+            && strlen($sabor["ingrediente"]) >= 4
+            && strlen($sabor["preço sem borda"]) <= 50
+            && strlen($sabor["preço com borda"]) >= 4
+            && strlen($sabor["doce"]) <= 200
+            && $sabor["folhas"] >= 0
+            && $sabor["folhas"] <= 5000000
+            && in_array($sabor["tipo"], $tipos, true);
     }
-    ?>
+
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $alterar = isset($_GET["chave"]);
+        if ($alterar) {
+            $chave = $_GET["chave"];
+            $sabor = buscar_sabor($chave);
+            if ($sabor == null) die("Não existe!");
+        } else {
+            $chave = "";
+            $sabor = [
+                "chave" => "",
+                "nome" => "",
+                "ingrediente" => "",
+                "preço sem borda" => "",
+                "preço com borda" => "",
+                "doce" => ""
+            ];
+        }
+        $validacaoOk = true;
+    } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $alterar = isset($_POST["chave"]);
+        if ($alterar) {
+            $sabor = [
+                "chave" => $_POST["chave"],
+                "nome" => $_POST["nome"],
+                "ingrediente" => $_POST["ingrediente"],
+                "preço sem borda" => $_POST["preco_sem_borda"],
+                "preço com borda" => $_POST["preco_borda_recheada"],
+                "doce" => $_POST["doce"] ? 'Sim' : 'Não',
+            ];
+            $validacaoOk = validar($sabor);
+            if ($validacaoOk) alterar_sabor($sabor);
+        } else {
+            $sabor = [
+                "chave" => $_POST["chave"],
+                "nome" => $_POST["nome"],
+                "ingrediente" => $_POST["ingrediente"],
+                "preço sem borda" => $_POST["preco_sem_borda"],
+                "preço com borda" => $_POST["preco_borda_recheada"],
+                "doce" => $_POST["doce"] ? 'Sim' : 'Não',
+            ];
+            $validacaoOk = validar($sabor);
+            if ($validacaoOk) $id = inserir_sabor($sabor);
+        }
+
+        if ($validacaoOk) {
+            header("Location: listar.php");
+            // $transacaoOk = true; // Se necessário, descomente esta linha e defina a variável $transacaoOk
+        }
+    } else {
+        die("Método não aceito");
+    }
+} catch (Exception $ex) {
+    // Tratar exceção aqui
+}
+?>
     
     <h1>Cadastro de Sabores de Pizza</h1>
     <form method="POST" action="">
@@ -55,5 +116,22 @@
             <button type="submit">Salvar</button>
         </div>
     </form>
+
+    <?php
+        // Exibir os preços formatados na tela
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            if ($alterar) {
+                echo "<h2>Editar Sabor de Pizza</h2>";
+            } else {
+                echo "<h2>Novo Sabor de Pizza</h2>";
+            }
+        } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if ($validacaoOk) {
+                echo "<p>Sabor de Pizza cadastrado com sucesso!</p>";
+            } else {
+                echo "<p>Erro ao cadastrar o sabor de pizza. Verifique os campos e tente novamente.</p>";
+            }
+        }
+    ?>
 </body>
 </html>
