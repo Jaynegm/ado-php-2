@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="Pizza.png">
     <link rel="stylesheet" href="style.css">
-    <title>Cadastro de Sabores de Pizza</title>
+    <title>Cadastro de Pizzas</title>
 </head>
 <body>
     
@@ -31,10 +31,11 @@ try {
             && in_array($sabor["tipo"], $tipos, true);
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $alterar = isset($_GET["chave"]);
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $alterar = isset($_POST["chave"]);
         if ($alterar) {
-            $chave = $_GET["chave"];
+            $chave = $_POST["chave"];
             $sabor = buscar_sabor($chave);
             if ($sabor == null) die("Não existe!");
         } else {
@@ -77,17 +78,19 @@ try {
 
         if ($validacaoOk) {
             header("Location: listar.php");
-            // $transacaoOk = true; // Se necessário, descomente esta linha e defina a variável $transacaoOk
+            $transacaoOk = true;
         }
     } else {
         die("Método não aceito");
     }
-} catch (Exception $ex) {
-    // Tratar exceção aqui
-}
 ?>
-    
+   <fieldset>
     <h1>Cadastro de Sabores de Pizza</h1>
+    <legend>
+        <a href="index.php">Home</a>
+        <a href="formulario.php">Cadastrar</a>
+        <a href="listar.php">Listar</a>
+    </legend>
     <form method="POST" action="">
         <div>
             <label for="nome">Nome:</label>
@@ -116,22 +119,6 @@ try {
             <button type="submit">Salvar</button>
         </div>
     </form>
-
-    <?php
-        // Exibir os preços formatados na tela
-        if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            if ($alterar) {
-                echo "<h2>Editar Sabor de Pizza</h2>";
-            } else {
-                echo "<h2>Novo Sabor de Pizza</h2>";
-            }
-        } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if ($validacaoOk) {
-                echo "<p>Sabor de Pizza cadastrado com sucesso!</p>";
-            } else {
-                echo "<p>Erro ao cadastrar o sabor de pizza. Verifique os campos e tente novamente.</p>";
-            }
-        }
-    ?>
+    </fieldset>
 </body>
 </html>
