@@ -89,22 +89,22 @@ try {
         <a href="cadastrar.php">Cadastrar</a>
         <a href="listar.php">Listar</a>
     </legend>
-    <form method="POST" action="">
+    <form method="POST" action="cadastrar.php">
         <div>
             <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
+            <input type="text" id="nome" name="nome" required value="<?= $sabor['nome'] ?>">
         </div>
         <div>
             <label for="ingrediente">Ingredientes:</label>
-            <input type="text" id="ingrediente" name="ingrediente" required>
+            <input type="text" id="ingrediente" name="ingrediente" required value="<?= $sabor['ingrediente'] ?>">
         </div>
         <div>
             <label for="preco_sem_borda">Preço sem Borda Recheada:</label>
-            <input type="number" id="preco_sem_borda" name="preco_sem_borda" required>
+            <input type="number" id="preco_sem_borda" name="preco_sem_borda" required value="<?= $sabor['preco_sem_borda'] ?>">
         </div>
         <div>
             <label for="preco_borda_recheada">Preço com Borda Recheada:</label>
-            <input type="number" id="preco_borda_recheada" name="preco_borda_recheada" required>
+            <input type="number" id="preco_borda_recheada" name="preco_borda_recheada" required value="<?= $sabor['preco_borda_recheada']?>">
         </div>
         <div>
             <label for="doce">Doce:</label>
