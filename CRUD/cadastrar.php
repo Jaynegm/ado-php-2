@@ -43,8 +43,8 @@ try {
                 "chave" => "",
                 "nome" => "",
                 "ingrediente" => "",
-                "preço sem borda" => "",
-                "preço com borda" => "",
+                "preco_sem_borda" => "",
+                "preco_com_borda" => "",
                 "doce" => ""
             ];
         }
@@ -56,9 +56,9 @@ try {
                 "chave" => $_POST["chave"],
                 "nome" => $_POST["nome"],
                 "ingrediente" => $_POST["ingrediente"],
-                "preço sem borda" => $_POST["preco_sem_borda"],
-                "preço com borda" => $_POST["preco_borda_recheada"],
-                "doce" => $_POST["doce"] ? 'Sim' : 'Não',
+                "preco_sem_borda" => $_POST["preco_sem_borda"],
+                "preco_com_borda" => $_POST["preco_borda_recheada"],
+                "doce" => $_POST["doce"] ? '1' : '0',
             ];
             $validacaoOk = validar($sabor);
             if ($validacaoOk) alterar_sabor($sabor);
@@ -66,9 +66,9 @@ try {
             $sabor = [
                 "nome" => $_POST["nome"],
                 "ingrediente" => $_POST["ingrediente"],
-                "preço sem borda" => $_POST["preco_sem_borda"],
-                "preço com borda" => $_POST["preco_borda_recheada"],
-                "doce" => $_POST["doce"] ? 'Sim' : 'Não',
+                "preco_sem_borda" => $_POST["preco_sem_borda"],
+                "preco_com_borda" => $_POST["preco_borda_recheada"],
+                "doce" => $_POST["doce"] ? '1' : '0',
             ];
             $validacaoOk = validar($sabor);
             if ($validacaoOk) $id = inserir_sabor($sabor);
@@ -109,8 +109,8 @@ try {
         <div>
             <label for="doce">Doce:</label>
             <select id="doce" name="doce" required>
-                <option value="0">Não</option>
-                <option value="1">Sim</option>
+                <option value="0" <?php if ($sabor['doce'] == '0') echo 'selected'; ?>>Não</option>
+                <option value="1" <?php if ($sabor['doce'] == '1') echo 'selected'; ?>>Sim</option>
             </select>
         </div>
         <div>
