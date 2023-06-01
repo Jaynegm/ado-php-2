@@ -13,15 +13,14 @@
 <?php
     
 try {
-    include "abrir_transacao.php";
-    include_once "operacoes.php";
+    include "abrir_transação.php";
+    include_once "operações.php";
 
     $tipos = listar_todos_sabores();
 
     function validar($sabor) {
         global $tipos;
-        return strlen($sabor["chave"]) >= 4
-            && strlen($sabor["nome"]) <= 30
+        return strlen($sabor["nome"]) <= 30
             && strlen($sabor["ingrediente"]) >= 4
             && strlen($sabor["preço sem borda"]) <= 50
             && strlen($sabor["preço com borda"]) >= 4
@@ -32,10 +31,10 @@ try {
     }
 
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $alterar = isset($_POST["chave"]);
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $alterar = isset($_GET["chave"]);
         if ($alterar) {
-            $chave = $_POST["chave"];
+            $chave = $_GET["chave"];
             $sabor = buscar_sabor($chave);
             if ($sabor == null) die("Não existe!");
         } else {
@@ -65,7 +64,6 @@ try {
             if ($validacaoOk) alterar_sabor($sabor);
         } else {
             $sabor = [
-                "chave" => $_POST["chave"],
                 "nome" => $_POST["nome"],
                 "ingrediente" => $_POST["ingrediente"],
                 "preço sem borda" => $_POST["preco_sem_borda"],
@@ -83,12 +81,12 @@ try {
     } else {
         die("Método não aceito");
     }
+
 ?>
    <fieldset>
     <h1>Cadastro de Sabores de Pizza</h1>
     <legend>
-        <a href="index.php">Home</a>
-        <a href="formulario.php">Cadastrar</a>
+        <a href="cadastrar.php">Cadastrar</a>
         <a href="listar.php">Listar</a>
     </legend>
     <form method="POST" action="">
@@ -97,8 +95,8 @@ try {
             <input type="text" id="nome" name="nome" required>
         </div>
         <div>
-            <label for="ingredientes">Ingredientes:</label>
-            <input type="text" id="ingredientes" name="ingredientes" required>
+            <label for="ingrediente">Ingredientes:</label>
+            <input type="text" id="ingrediente" name="ingrediente" required>
         </div>
         <div>
             <label for="preco_sem_borda">Preço sem Borda Recheada:</label>
@@ -122,3 +120,12 @@ try {
     </fieldset>
 </body>
 </html>
+
+<?php
+
+$transacaoOk = true;
+
+} finally {
+    include "fechar_transação.php";
+}
+?>
