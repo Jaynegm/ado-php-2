@@ -20,17 +20,14 @@ try {
 
     function validar($sabor) {
         global $tipos;
-        return strlen($sabor["nome"]) <= 30
-            && strlen($sabor["ingrediente"]) >= 4
-            && strlen($sabor["preço sem borda"]) <= 50
-            && strlen($sabor["preço com borda"]) >= 4
-            && strlen($sabor["doce"]) <= 200
-            && $sabor["folhas"] >= 0
-            && $sabor["folhas"] <= 5000000
-            && in_array($sabor["tipo"], $tipos, true);
+        if (strlen($sabor["nome"]) > 30) return "Nome longo demais";
+        if (strlen($sabor["ingredientes"]) < 4) return "Ingredientes muito curto";
+        if (((float) $sabor["preco_sem_borda"]) <= 0) return "Tem que ter preço sem borda";
+        if (((float) $sabor["preco_com_borda"]) <= 0) return "Tem que ter preço com borda";
+        return "";
     }
 
-
+    $erros = "";
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $alterar = isset($_GET["chave"]);
         if ($alterar) {
@@ -42,7 +39,7 @@ try {
             $sabor = [
                 "chave" => "",
                 "nome" => "",
-                "ingrediente" => "",
+                "ingredientes" => "",
                 "preco_sem_borda" => "",
                 "preco_com_borda" => "",
                 "doce" => ""
@@ -55,22 +52,24 @@ try {
             $sabor = [
                 "chave" => $_POST["chave"],
                 "nome" => $_POST["nome"],
-                "ingrediente" => $_POST["ingrediente"],
+                "ingredientes" => $_POST["ingredientes"],
                 "preco_sem_borda" => $_POST["preco_sem_borda"],
-                "preco_com_borda" => $_POST["preco_borda_recheada"],
+                "preco_com_borda" => $_POST["preco_com_borda"],
                 "doce" => $_POST["doce"] ? '1' : '0',
             ];
-            $validacaoOk = validar($sabor);
+            $erros = validar($sabor);
+            $validacaoOk = ($erros == "");
             if ($validacaoOk) alterar_sabor($sabor);
         } else {
             $sabor = [
                 "nome" => $_POST["nome"],
-                "ingrediente" => $_POST["ingrediente"],
+                "ingredientes" => $_POST["ingredientes"],
                 "preco_sem_borda" => $_POST["preco_sem_borda"],
-                "preco_com_borda" => $_POST["preco_borda_recheada"],
+                "preco_com_borda" => $_POST["preco_com_borda"],
                 "doce" => $_POST["doce"] ? '1' : '0',
             ];
-            $validacaoOk = validar($sabor);
+            $erros = validar($sabor);
+            $validacaoOk = ($erros == "");
             if ($validacaoOk) $id = inserir_sabor($sabor);
         }
 
@@ -90,21 +89,24 @@ try {
         <a href="listar.php">Listar</a>
     </legend>
     <form method="POST" action="cadastrar.php">
+        <?php if ($erros) { ?>
+            <div><?= $erros ?></div>
+        <?php } ?>
         <div>
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" required value="<?= $sabor['nome'] ?>">
         </div>
         <div>
-            <label for="ingrediente">Ingredientes:</label>
-            <input type="text" id="ingrediente" name="ingrediente" required value="<?= $sabor['ingrediente'] ?>">
+            <label for="ingredientes">Ingredientes:</label>
+            <input type="text" id="ingredientes" name="ingredientes" required value="<?= $sabor['ingredientes'] ?>">
         </div>
         <div>
             <label for="preco_sem_borda">Preço sem Borda Recheada:</label>
             <input type="number" id="preco_sem_borda" name="preco_sem_borda" required value="<?= $sabor['preco_sem_borda'] ?>">
         </div>
         <div>
-            <label for="preco_borda_recheada">Preço com Borda Recheada:</label>
-            <input type="number" id="preco_borda_recheada" name="preco_borda_recheada" required value="<?= $sabor['preco_borda_recheada']?>">
+            <label for="preco_com_borda">Preço com Borda Recheada:</label>
+            <input type="number" id="preco_com_borda" name="preco_com_borda" required value="<?= $sabor['preco_com_borda']?>">
         </div>
         <div>
             <label for="doce">Doce:</label>

@@ -5,7 +5,7 @@ include_once "conectar.php";
 function inserir_sabor($sabor) {
     global $pdo;
     $sql = "INSERT INTO sabor_pizza (nome, ingredientes, preco_sem_borda, preco_borda_recheada, doce) " .
-            "VALUES (:nome, :ingredientes, :preco_sem_borda, :preco_borda_recheada, :doce)";
+            "VALUES (:nome, :ingredientes, :preco_sem_borda, :preco_com_borda, :doce)";
     $pdo->prepare($sql)->execute($sabor);
     return $pdo->lastInsertId();
 }
